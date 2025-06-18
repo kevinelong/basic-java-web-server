@@ -27,7 +27,7 @@ public class Main {
     static class HomePageHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String response = "Hello, this is a simple HTTP server response!";
+            String response = "<h1>Home Page</h1> Hello <b>world</b>!!!";
             exchange.sendResponseHeaders(200, response.length());
             OutputStream os = exchange.getResponseBody();
             os.write(response.getBytes());
@@ -38,7 +38,7 @@ public class Main {
     static class CitiesHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String response = getJSON();
+            String response = getCityListJSON();
             exchange.sendResponseHeaders(200, response.length());
             OutputStream os = exchange.getResponseBody();
             os.write(response.getBytes());
@@ -46,8 +46,8 @@ public class Main {
         }
     }
 
-    static String getJSON() {
-        return String.format("[\n%s\n]\n", getData().stream().map(
+    static String getCityListJSON() {
+        return String.format("[\n%s\n]\n", getCityList().stream().map(
                 o -> String.format("\t{\n%s\n\t}", getProps(o))
         ).collect(Collectors.joining(",\n")));
     }
@@ -58,16 +58,16 @@ public class Main {
         ).collect(Collectors.joining(",\n"));
     }
 
-    static ArrayList<HashMap<String, String>> getData() {
+    static ArrayList<HashMap<String, String>> getCityList() {
         var list = new ArrayList<HashMap<String, String>>();
-        list.add(getObject("Olympia", "WA"));
-        list.add(getObject("Salem", "OR"));
+        list.add(getCityObject("Olympia", "WA"));
+        list.add(getCityObject("Salem", "OR"));
         return list;
     }
 
     static Integer id = 1;
 
-    static HashMap<String, String> getObject(String city, String state) {
+    static HashMap<String, String> getCityObject(String city, String state) {
         var o = new HashMap<String, String>();
         o.put("ID", id.toString());
         o.put("CITY", city);
